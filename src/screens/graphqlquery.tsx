@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import React, { FC } from "react";
+import { FC } from "react";
 import { GraphQLResponse } from "../../node_modules/graphql-request/src/types";
 import graphqlRequestClient from "../lib/clients/graphqlRequestClient";
 import User from "../lib/interfaces/user";
