@@ -30,7 +30,7 @@ export type Query = {
   users: [UserType];
 };
 
-interface User {
+export type User = {
   accountType: string;
   firstName: string;
   gender: string;
@@ -38,9 +38,7 @@ interface User {
   middleName: string;
   phoneNumber: string;
   username: string;
-}
-
-export default User;
+};
 
 export type UpdateUserInput = {
   accountType: string;

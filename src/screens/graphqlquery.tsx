@@ -1,9 +1,8 @@
 import { gql } from "graphql-request";
 import { FC } from "react";
-import { GraphQLResponse } from "../../node_modules/graphql-request/src/types";
 import graphqlRequestClient from "../lib/clients/graphqlRequestClient";
-import User from "../lib/interfaces/user";
 import { useQuery } from "@tanstack/react-query";
+import { User } from "../lib/interfaces/user";
 
 const getUsers = gql`
   query GetUsers {
@@ -19,23 +18,33 @@ const getUsers = gql`
 `;
 
 const GqlrequestQuery: FC = () => {
-  const { isLoading, error, data } = useQuery<GraphQLResponse, Error, User[]>(
+  const { isLoading, error, data } = useQuery<{ users: User[] }, Error>(
     ["users"],
-
     async () => {
-      return graphqlRequestClient.request<GraphQLResponse<User[]>>(getUsers);
+      const response = await graphqlRequestClient.request<{ users: User[] }>(
+        getUsers
+      );
+      return response;
     }
-    // {
-    //     select: (response) => response.users,
-    // }
   );
-  console.log(data);
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>{error.message}</p>;
 
-  return <div>
-    {data?.map(data,index) => {}}
-  </div>;
+  return (
+    <ul>
+      {data.users.map((user, index) => (
+        <li key={index}>
+          <p>
+            Name: {user.firstName} {user.middleName} {user.lastname}
+          </p>
+          <p>Account Type: {user.accountType}</p>
+          <p>Phone Number: {user.phoneNumber}</p>
+          <p>Username: {user.username}</p>
+        </li>
+      ))}
+    </ul>
+  );
 };
 
 export default GqlrequestQuery;
