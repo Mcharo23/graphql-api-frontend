@@ -1,14 +1,17 @@
-import "./App.css";
-import GqlrequestQuery from "./screens/graphqlquery";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LoginPage from "./screens/login";
+import HomePage from "./screens/home";
+import RegisterPage from "./screens/register";
 
 function App() {
   return (
-    <div className="bg-black">
-      <h1 className="text-3xl font-bold underline">GraphQl</h1>
-      <div>
-        <GqlrequestQuery />
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/home" element={<HomePage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

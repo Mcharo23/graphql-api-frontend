@@ -5,10 +5,11 @@ const requestHeaders = {
 };
 
 const graphqlRequestClient = new GraphQLClient(
-  "http://192.168.150.152:3000/graphql" as string,
+  "http://localhost:3000/graphql" as string,
   {
     headers: requestHeaders,
   }
 );
 
 export default graphqlRequestClient;
+//http://192.168.150.152:3000/graphql

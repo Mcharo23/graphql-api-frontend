@@ -1,0 +1,10 @@
+query GetUsers {
+  users {
+    firstName
+    middleName
+    lastname
+    accountType
+    phoneNumber
+    username
+  }
+}

@@ -4,11 +4,10 @@ import App from "./App.tsx";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-
 const queryclient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 1000,
+      staleTime: 20 * 1000,
     },
   },
 });
@@ -16,7 +15,6 @@ const queryclient = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryclient}>
-      
       <App />
     </QueryClientProvider>
   </React.StrictMode>
