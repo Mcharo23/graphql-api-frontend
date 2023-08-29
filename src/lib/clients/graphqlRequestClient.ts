@@ -1,11 +1,12 @@
 import { GraphQLClient } from "graphql-request";
+import { getUserAccessToken } from "../../utils/localStorageUtils";
 
 const requestHeaders = {
-  authorization: "Bearer Token",
+  authorization: `Bearer ${getUserAccessToken()}`,
 };
 
 const graphqlRequestClient = new GraphQLClient(
-  "http://localhost:3000/graphql" as string,
+  "http://192.168.150.152:3000/graphql" as string,
   {
     headers: requestHeaders,
   }

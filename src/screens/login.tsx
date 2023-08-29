@@ -8,18 +8,32 @@ import {
 import graphqlRequestClient from "../lib/clients/graphqlRequestClient";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { GraphQLError } from "graphql";
+import { saveUserData } from "../utils/localStorageUtils";
 
 const LoginPage: FC = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [graphQLError, setGraphQLError] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
 
   const { mutate } = useLoginUserInputMutation(graphqlRequestClient, {
     onSuccess: (data: LoginUserInputMutation) => {
       queryClient.invalidateQueries(["LoginUserInput"]);
-      return console.log("mutation data", data);
+      saveUserData(data);
+      navigate("/home");
+      return;
+    },
+    onError: (error: GraphQLError) => {
+      const errorMessage = Array.isArray(
+        error.response.errors[0].message.message
+      )
+        ? error.response.errors[0].message.message.join(", ")
+        : error.response.errors[0].message.message;
+
+      setGraphQLError(errorMessage);
     },
   });
 
@@ -48,6 +62,9 @@ const LoginPage: FC = () => {
     <div style={styles.body}>
       <div style={styles.card}>
         <h1 style={styles.h1}>Login</h1>
+        <div style={styles.error}>
+          {graphQLError && <div>{graphQLError}</div>}
+        </div>
         <CustomInputText
           type={"text"}
           borderRadius={5}
@@ -126,6 +143,13 @@ const styles: { [key: string]: React.CSSProperties } = {
   h1: {
     color: "#0041C2",
     fontFamily: "sans-serif",
+  },
+  error: {
+    color: "red",
+    width: "60%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 };
 

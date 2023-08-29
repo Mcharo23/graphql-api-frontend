@@ -10,6 +10,7 @@ import {
 } from "../generated/graphql";
 import graphqlRequestClient from "../lib/clients/graphqlRequestClient";
 import { useQueryClient } from "@tanstack/react-query";
+import { GraphQLError } from "graphql";
 
 const RegisterPage: FC = () => {
   const navigate = useNavigate();
@@ -24,11 +25,33 @@ const RegisterPage: FC = () => {
   const [password, setPassword] = useState("");
   const [accountType, setAccountType] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [graphQLError, setGraphQLError] = useState<string | null>(null);
+
+  // const { mutate } = useCreateUserInputMutation(graphqlRequestClient, {
+  //   onSuccess: (data: CreateUserInputMutation) => {
+  //     queryClient.invalidateQueries(["createUserInput"]);
+  //     return console.log("mutation data", data);
+  //   },
+  //   onError(error: GraphQLError) {
+
+  //     // console.log(" graphql error => ",error.response.message);
+  //     console.log(" graphql error => ",error);
+  //   },
+  // });
 
   const { mutate } = useCreateUserInputMutation(graphqlRequestClient, {
     onSuccess: (data: CreateUserInputMutation) => {
       queryClient.invalidateQueries(["createUserInput"]);
       return console.log("mutation data", data);
+    },
+    onError: (error: GraphQLError) => {
+      const errorMessage = Array.isArray(
+        error.response.errors[0].message.message
+      )
+        ? error.response.errors[0].message.message.join(", ")
+        : error.response.errors[0].message.message;
+
+      setGraphQLError(errorMessage);
     },
   });
 
@@ -101,6 +124,9 @@ const RegisterPage: FC = () => {
     <div style={styles.body}>
       <div style={styles.card}>
         <h1 style={styles.h1}>Register</h1>
+        <div style={styles.error}>
+          {graphQLError && <div>{graphQLError}</div>}
+        </div>
         <CustomInputText
           type={"text"}
           borderRadius={5}
@@ -237,6 +263,13 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     width: "50%",
     justifyContent: "space-evenly",
+  },
+  error: {
+    color: "red",
+    width: "60%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 };
 
