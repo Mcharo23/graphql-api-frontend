@@ -16,7 +16,7 @@ const HomePage: FC = () => {
   }, []);
 
   const { isLoading, error, data } = useGetUsersQuery<GetUsersQuery, Error>(
-    graphqlRequestClient,
+    graphqlRequestClient.setHeaders({ Authorization: `Bearer ${accessToken}` }),
     {},
     { enabled: shouldFetchData } // Only fetch when shouldFetchData is true
   );

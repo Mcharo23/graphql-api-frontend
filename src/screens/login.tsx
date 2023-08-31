@@ -42,6 +42,7 @@ const LoginPage: FC = () => {
   };
 
   const handlePassword = (password: string) => {
+
     setPassword(password);
   };
 
